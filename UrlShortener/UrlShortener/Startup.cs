@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using UrlShortener.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace UrlShortener
 {
@@ -24,6 +26,7 @@ namespace UrlShortener
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<UrlShortenerContext>(options => options.UseMySQL(Configuration.GetConnectionString("UrlShortenerContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +53,7 @@ namespace UrlShortener
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Urls}/{action=Index}/{id?}");
             });
         }
     }
