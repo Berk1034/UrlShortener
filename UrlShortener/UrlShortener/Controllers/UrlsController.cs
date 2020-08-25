@@ -62,9 +62,13 @@ namespace UrlShortener.Controllers
             if (ModelState.IsValid)
             {
                 url.FullName = UrlHelpers.AppendProtocol(url.FullName);
-                url.ShortName = UrlHelpers.ShortenUrl(url.FullName);
-                _context.Add(url);
-                await _context.SaveChangesAsync();
+                var innerUrl = await _context.Urls.FirstOrDefaultAsync(dbUrl => dbUrl.FullName == url.FullName);
+                if (innerUrl == null)
+                {
+                    url.ShortName = UrlHelpers.ShortenUrl(url.FullName);
+                    _context.Add(url);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(url);
@@ -102,8 +106,16 @@ namespace UrlShortener.Controllers
             {
                 try
                 {
-                    _context.Update(url);
-                    await _context.SaveChangesAsync();
+                    var prevUrl = await _context.Urls.FindAsync(id);
+                    _context.Entry(prevUrl).State = EntityState.Detached;
+
+                    url.FullName = UrlHelpers.AppendProtocol(url.FullName);
+                    if (prevUrl.FullName != url.FullName)
+                    {
+                        url.ShortName = UrlHelpers.ShortenUrl(url.FullName);
+                        _context.Update(url);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
