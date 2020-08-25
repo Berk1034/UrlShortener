@@ -31,10 +31,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FullName)
+                <a href="@item.FullName">@Html.DisplayFor(modelItem => item.FullName)</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ShortName)
+                <a asp-action="Redirection" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.ShortName)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreationDate)
