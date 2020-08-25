@@ -30,6 +30,7 @@ namespace UrlShortener.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("FullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ShortName")
