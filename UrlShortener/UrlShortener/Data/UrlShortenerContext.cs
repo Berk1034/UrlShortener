@@ -12,7 +12,7 @@ namespace UrlShortener.Data
         public UrlShortenerContext(DbContextOptions<UrlShortenerContext> options)
             :base(options)
         {
-
+            Database.EnsureCreated();
         }
 
         public DbSet<Url> Urls { get; set; }
